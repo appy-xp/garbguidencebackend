@@ -2,6 +2,8 @@ const { Sequelize, Model } = require("sequelize");
 const sequelize = require("./../../config/sqlconnection");
 
 var UserBlockInfo = require("./block_users.model");
+var userRoleInfo = require("./user_role.model");
+var roleInfo = require("./../roles/roles.model");
 
 class User extends Model {}
 User.init(
@@ -16,6 +18,10 @@ User.init(
       type: Sequelize.STRING,
       allowNull: false,
     },
+    password: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
     username: {
       type: Sequelize.STRING,
     },
@@ -26,5 +32,9 @@ User.init(
   }
 );
 User.hasOne(UserBlockInfo);
+User.hasOne(userRoleInfo);
 UserBlockInfo.belongsTo(User);
+userRoleInfo.belongsTo(User);
+roleInfo.hasOne(userRoleInfo);
+userRoleInfo.belongsTo(roleInfo);
 module.exports = User;
