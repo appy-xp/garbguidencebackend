@@ -5,9 +5,6 @@ module.exports = function purchaseDetMapping(purchaseDet, purchaseDetails) {
   if (purchaseDetails.unit) {
     purchaseDet.unit = purchaseDetails.unit;
   }
-  if (purchaseDetails.purchaseId) {
-    purchaseDet.purchaseId = purchaseDetails.purchaseId;
-  }
 
   return purchaseDet;
 };

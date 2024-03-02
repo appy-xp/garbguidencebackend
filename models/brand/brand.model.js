@@ -1,18 +1,11 @@
-const Sequelize = require("sequelize");
-const sequelize = require("./../../config/sqlconnection");
+const mongoose = require("mongoose");
 
-const brand = sequelize.define(
-  "brand",
+const BrandSchema = new mongoose.Schema(
   {
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true,
-    },
     brandName: {
-      type: Sequelize.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
+      unique: true,
     },
   },
   {
@@ -20,4 +13,6 @@ const brand = sequelize.define(
   }
 );
 
-module.exports = brand;
+const Brand = mongoose.model("Brand", BrandSchema);
+
+module.exports = Brand;

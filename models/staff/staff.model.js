@@ -1,33 +1,29 @@
-const Sequelize = require("sequelize");
-const sequelize = require("./../../config/sqlconnection");
-const status = require("./../status/status.model");
+const mongoose = require("mongoose");
 
-const staff = sequelize.define(
-  "staff",
+const StaffSchema = new mongoose.Schema(
   {
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true,
-    },
     firstName: {
-      type: Sequelize.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
     lastName: {
-      type: Sequelize.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
     contactNo: {
-      type: Sequelize.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
+    },
+    statusId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Status",
     },
   },
   {
     timestamps: true,
   }
 );
-staff.hasMany(status);
-status.belongsTo(staff);
-module.exports = staff;
+
+const Staff = mongoose.model("Staff", StaffSchema);
+
+module.exports = Staff;

@@ -1,40 +1,31 @@
-const { Sequelize, Model } = require("sequelize");
-const sequelize = require("./../../config/sqlconnection");
+const mongoose = require("mongoose");
 
-var UserBlockInfo = require("./block_users.model");
-var userRoleInfo = require("./user_role.model");
-var roleInfo = require("./../roles/roles.model");
-
-class User extends Model {}
-User.init(
+const UserSchema = new mongoose.Schema(
   {
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      allowNull: true,
-      primaryKey: true,
-    },
     email: {
-      type: Sequelize.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
     },
     password: {
-      type: Sequelize.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
     username: {
-      type: Sequelize.STRING,
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
     },
   },
   {
-    sequelize,
-    modelName: "user",
+    timestamps: true,
   }
 );
-User.hasOne(UserBlockInfo);
-User.hasOne(userRoleInfo);
-UserBlockInfo.belongsTo(User);
-userRoleInfo.belongsTo(User);
-roleInfo.hasOne(userRoleInfo);
-userRoleInfo.belongsTo(roleInfo);
+
+const User = mongoose.model("User", UserSchema);
+
 module.exports = User;

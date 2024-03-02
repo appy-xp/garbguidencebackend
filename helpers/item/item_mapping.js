@@ -8,6 +8,18 @@ module.exports = function itemMappingDetails(itemDet, itemDetails) {
   if (itemDetails.quantity) {
     itemDet.quantity = itemDetails.quantity;
   }
+  if (itemDetails.sizeId) {
+    itemDet.sizeId = itemDetails.sizeId;
+  }
+  if (itemDetails.brandId) {
+    itemDet.brandId = itemDetails.brandId;
+  }
+  if (itemDetails.bomId) {
+    itemDet.bomId = itemDetails.bomId;
+  }
+  if (itemDetails.statusId) {
+    itemDet.statusId = itemDetails.statusId;
+  }
 
   return itemDet;
 };

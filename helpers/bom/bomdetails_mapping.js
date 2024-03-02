@@ -2,8 +2,8 @@ module.exports = function bomMappingDetails(bomDet, bomDetails) {
   if (bomDetails.quantity) {
     bomDet.quantity = bomDetails.quantity;
   }
-  if (bomDetails.bomId) {
-    bomDet.bomId = bomDetails.bomId;
+  if (bomDetails.purchaseId) {
+    bomDet.purchaseId = bomDetails.purchaseId;
   }
 
   return bomDet;

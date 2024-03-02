@@ -1,86 +1,42 @@
-const Sequelize = require("sequelize");
-const sequelize = require("./../../config/sqlconnection");
+const mongoose = require("mongoose");
 
-const status = sequelize.define(
-  "status",
+const StatusSchema = new mongoose.Schema(
   {
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true,
-    },
     isAssigned: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-      values: [true, false],
-      validate: {
-        isIn: {
-          args: [[true, false]],
-          msg: "Incorrect options",
-        },
-      },
+      type: Boolean,
+      enum: [true, false],
+      default: false,
+      required: true,
     },
     isReceived: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-      values: [true, false],
-      validate: {
-        isIn: {
-          args: [[true, false]],
-          msg: "Incorrect options",
-        },
-      },
+      type: Boolean,
+      enum: [true, false],
+      default: false,
+      required: true,
     },
     isSteching: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-      values: [true, false],
-      validate: {
-        isIn: {
-          args: [[true, false]],
-          msg: "Incorrect options",
-        },
-      },
+      type: Boolean,
+      enum: [true, false],
+      default: false,
+      required: true,
     },
     isFinishing: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-      values: [true, false],
-      validate: {
-        isIn: {
-          args: [[true, false]],
-          msg: "Incorrect options",
-        },
-      },
+      type: Boolean,
+      enum: [true, false],
+      default: false,
+      required: true,
     },
     isPacking: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-      values: [true, false],
-      validate: {
-        isIn: {
-          args: [[true, false]],
-          msg: "Incorrect options",
-        },
-      },
+      type: Boolean,
+      enum: [true, false],
+      default: false,
+      required: true,
     },
     isDispatched: {
-      type: Sequelize.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-      values: [true, false],
-      validate: {
-        isIn: {
-          args: [[true, false]],
-          msg: "Incorrect options",
-        },
-      },
+      type: Boolean,
+      enum: [true, false],
+      default: false,
+      required: true,
     },
   },
   {
@@ -88,4 +44,6 @@ const status = sequelize.define(
   }
 );
 
-module.exports = status;
+const Status = mongoose.model("Status", StatusSchema);
+
+module.exports = Status;

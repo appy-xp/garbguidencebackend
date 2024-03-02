@@ -1,35 +1,25 @@
-const Sequelize = require("sequelize");
-const sequelize = require("./../../config/sqlconnection");
+const mongoose = require("mongoose");
 
-const roles = sequelize.define(
-  "roles",
+const RoleSchema = new mongoose.Schema(
   {
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true,
-    },
     roles: {
-      type: Sequelize.STRING,
-      allowNull: false,
-      defaultValue: "user",
-      values: ["superadmin", "admin", "user", "developer"],
-      unique: true,
-      validate: {
-        isIn: {
-          args: [["superadmin", "admin", "user", "developer"]],
-          msg: "Incorrect options",
-        },
-      },
+      type: String,
+      required: true,
+      enum: ["superadmin", "admin", "user", "developer"],
+      default: "user",
     },
     role_id: {
-      type: Sequelize.INTEGER,
-      values: [1000001, 1000011, 1001111, 1011111],
+      type: Number,
+      required: true,
+      enum: [1000001, 1000011, 1001111, 1011111],
+      default: 1001111,
     },
   },
   {
     timestamps: true,
   }
 );
-module.exports = roles;
+
+const Role = mongoose.model("Role", RoleSchema);
+
+module.exports = Role;

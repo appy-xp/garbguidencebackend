@@ -1,25 +1,18 @@
-const Sequelize = require("sequelize");
-const sequelize = require("./../../config/sqlconnection");
+const mongoose = require("mongoose");
 
-const size = sequelize.define(
-  "size",
+const SizeSchema = new mongoose.Schema(
   {
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true,
-    },
     sizeName: {
-      type: Sequelize.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
+      unique: true,
     },
     sizeCode: {
-      type: Sequelize.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
     sizeDetail: {
-      type: Sequelize.STRING,
+      type: String,
     },
   },
   {
@@ -27,4 +20,6 @@ const size = sequelize.define(
   }
 );
 
-module.exports = size;
+const Size = mongoose.model("Size", SizeSchema);
+
+module.exports = Size;

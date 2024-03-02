@@ -3,8 +3,6 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-var config = require("./config/index");
-const sequelize = require("./config/sqlconnection");
 
 var app = express();
 var bodyParser = require("body-parser");
@@ -27,6 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/data", express.static(path.join(__dirname, "public")));
 
 require("./routing/appRouting")(app);
+require("./config/config.mongoose");
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -44,19 +43,4 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-sequelize
-  .sync()
-  .then((result) => {
-    console.log("database connected");
-    app.listen(config.port, function (err, done) {
-      if (err) {
-        console.log("application start error");
-      } else {
-        console.log("application is running");
-      }
-    });
-  })
-  .catch((err) => {
-    console.log("database connection issue", err);
-  });
 module.exports = app;

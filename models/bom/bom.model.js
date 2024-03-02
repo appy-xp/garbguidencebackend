@@ -1,26 +1,28 @@
-const Sequelize = require("sequelize");
-const sequelize = require("./../../config/sqlconnection");
-const bomDetails = require("./bomdetails.model");
+const mongoose = require("mongoose");
+const BOMDetailsSchema = new mongoose.Schema({
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  purchaseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Purchase",
+  },
+});
 
-const bom = sequelize.define(
-  "bom",
+const BOMSchema = new mongoose.Schema(
   {
-    id: {
-      type: Sequelize.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true,
-    },
     modelName: {
-      type: Sequelize.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
+    bomdetails: [BOMDetailsSchema],
   },
   {
     timestamps: true,
   }
 );
-bom.hasMany(bomDetails);
-bomDetails.belongsTo(bom);
 
-module.exports = bom;
+const BOM = mongoose.model("Bom", BOMSchema);
+
+module.exports = BOM;
