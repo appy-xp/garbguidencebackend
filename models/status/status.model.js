@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const StatusSchema = new mongoose.Schema(
   {
@@ -44,6 +44,4 @@ const StatusSchema = new mongoose.Schema(
   }
 );
 
-const Status = mongoose.model("Status", StatusSchema);
-
-module.exports = Status;
+export const Status = mongoose.model("Status", StatusSchema);

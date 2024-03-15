@@ -1,4 +1,4 @@
-module.exports = function userRoleMappingDetails(userRoleDet, userRoleDetails) {
+export function userRoleMappingDetails(userRoleDet, userRoleDetails) {
   if (userRoleDetails.userId) {
     userRoleDet.userId = userRoleDetails.userId;
   }
@@ -7,4 +7,4 @@ module.exports = function userRoleMappingDetails(userRoleDet, userRoleDetails) {
   }
 
   return userRoleDet;
-};
+}

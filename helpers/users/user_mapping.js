@@ -1,4 +1,4 @@
-module.exports = function userMappingDetails(userdet, userDetails) {
+export function userMappingDetails(userdet, userDetails) {
   if (userDetails.email) {
     userdet.email = userDetails.email;
   }
@@ -9,4 +9,4 @@ module.exports = function userMappingDetails(userdet, userDetails) {
     userdet.username = userDetails.username;
   }
   return userdet;
-};
+}

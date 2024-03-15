@@ -1,10 +1,17 @@
-var mongoose = require("mongoose");
-var config = require("./index");
-var localUrl = config.dbUrl + "/" + config.dbName;
+import mongoose from "mongoose";
+import { DB_NAME } from "../config/index.js";
+const connectDB = async () => {
+  try {
+    const connection = await mongoose.connect(
+      `${process.env.DB_URL}/${DB_NAME}`
+    );
+    console.log(
+      `\n MongoDB connected !! DB HOST: ${connection.connection.host}`
+    );
+  } catch (err) {
+    console.log("mongodb connection failed: ", err);
+    process.exit(1);
+  }
+};
 
-try {
-  mongoose.connect(localUrl);
-  console.log("DB connection success");
-} catch (err) {
-  console.log("connection success to db");
-}
+export default connectDB;

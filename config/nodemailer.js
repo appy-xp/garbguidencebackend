@@ -1,5 +1,5 @@
-var nodemailer = require("nodemailer");
-var sender = nodemailer.createTransport({
+import nodemailer from "nodemailer";
+let sender = nodemailer.createTransport({
   host: "",
   port: 465,
   secure: true,
@@ -8,4 +8,4 @@ var sender = nodemailer.createTransport({
     pass: "",
   },
 });
-module.exports = sender;
+export default sender;

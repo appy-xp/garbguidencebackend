@@ -1,4 +1,4 @@
-module.exports = function statusMappingDetails(statusDet, statusDetails) {
+function statusMappingDetails(statusDet, statusDetails) {
   if (statusDetails.isAssigned) {
     statusDet.isAssigned = statusDetails.isAssigned;
   }
@@ -25,4 +25,6 @@ module.exports = function statusMappingDetails(statusDet, statusDetails) {
   }
 
   return statusDet;
-};
+}
+
+export { statusMappingDetails };

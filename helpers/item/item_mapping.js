@@ -1,4 +1,4 @@
-module.exports = function itemMappingDetails(itemDet, itemDetails) {
+function itemMappingDetails(itemDet, itemDetails) {
   if (itemDetails.modelName) {
     itemDet.modelName = itemDetails.modelName;
   }
@@ -22,4 +22,6 @@ module.exports = function itemMappingDetails(itemDet, itemDetails) {
   }
 
   return itemDet;
-};
+}
+
+export { itemMappingDetails };

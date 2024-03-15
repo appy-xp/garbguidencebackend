@@ -1,4 +1,4 @@
-module.exports = function purchaseDetMapping(purchaseDet, purchaseDetails) {
+export function purchaseDetMapping(purchaseDet, purchaseDetails) {
   if (purchaseDetails.quantity) {
     purchaseDet.quantity = purchaseDetails.quantity;
   }
@@ -7,4 +7,4 @@ module.exports = function purchaseDetMapping(purchaseDet, purchaseDetails) {
   }
 
   return purchaseDet;
-};
+}

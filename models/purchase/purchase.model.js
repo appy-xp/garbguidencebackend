@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const PurchaseDetailsSchema = new mongoose.Schema({
   quantity: {
@@ -24,6 +24,4 @@ const PurchaseSchema = new mongoose.Schema(
   }
 );
 
-const Purchase = mongoose.model("Purchase", PurchaseSchema);
-
-module.exports = Purchase;
+export const Purchase = mongoose.model("Purchase", PurchaseSchema);

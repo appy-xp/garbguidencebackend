@@ -1,4 +1,4 @@
-module.exports = function bomMappingDetails(bomDet, bomDetails) {
+export function bomMappingDetails(bomDet, bomDetails) {
   if (bomDetails.quantity) {
     bomDet.quantity = bomDetails.quantity;
   }
@@ -7,4 +7,4 @@ module.exports = function bomMappingDetails(bomDet, bomDetails) {
   }
 
   return bomDet;
-};
+}

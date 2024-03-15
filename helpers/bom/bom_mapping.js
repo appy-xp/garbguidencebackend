@@ -1,7 +1,7 @@
-module.exports = function bomMappingDetails(bomDet, bomDetails) {
+export function bomMappingDetails(bomDet, bomDetails) {
   if (bomDetails.modelName) {
     bomDet.modelName = bomDetails.modelName;
   }
 
   return bomDet;
-};
+}

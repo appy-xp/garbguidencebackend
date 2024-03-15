@@ -1,12 +1,11 @@
-var express = require("express");
-var router = express.Router();
-var sizeModel = require("./../../models/size/size.model");
-var mapSize = require("./../../helpers/size/size_mapping");
-
+import { Router } from "express";
+import { Size } from "./../../models/size/size.model.js";
+import { sizeMappingDetails } from "./../../helpers/size/size_mapping.js";
+const router = Router();
 router
   .route("/")
   .get(function (req, res, next) {
-    sizeModel.aggregate([{ $sort: { _id: -1 } }], function (err, saved) {
+    Size.aggregate([{ $sort: { _id: -1 } }], function (err, saved) {
       if (err) {
         return next(err);
       }
@@ -14,8 +13,8 @@ router
     });
   })
   .post(function (req, res, next) {
-    var newData = new sizeModel({});
-    var mappedData = mapSize(newData, req.body);
+    var newData = new Size({});
+    var mappedData = sizeMappingDetails(newData, req.body);
     mappedData.save(function (err, saved) {
       if (err) {
         return next(err);
@@ -29,7 +28,7 @@ router
   .get(function (req, res, next) {
     var dataid = req.params.id;
 
-    sizeModel.findById(dataid, function (err, saved) {
+    Size.findById(dataid, function (err, saved) {
       if (err) {
         return next(err);
       } else {
@@ -39,12 +38,12 @@ router
   })
   .put(function (req, res, next) {
     var dataid = req.params.id;
-    sizeModel.findById(dataid, function (err, saved) {
+    Size.findById(dataid, function (err, saved) {
       if (err) {
         return next(err);
       }
       if (saved) {
-        var updateddata = mapSize(saved, req.body);
+        var updateddata = sizeMappingDetails(saved, req.body);
         updateddata.save(function (err, updated) {
           if (err) {
             return next(err);
@@ -61,7 +60,7 @@ router
   })
   .delete(function (req, res, next) {
     var dataid = req.params.id;
-    sizeModel.findByIdAndDelete(dataid, function (err, saved) {
+    Size.findByIdAndDelete(dataid, function (err, saved) {
       if (err) {
         return next(err);
       } else {
@@ -70,4 +69,4 @@ router
     });
   });
 
-module.exports = router;
+export default router;

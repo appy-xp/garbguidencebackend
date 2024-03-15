@@ -1,12 +1,12 @@
-var express = require("express");
-var router = express.Router();
-var roleModel = require("./../../models/roles/roles.model");
-var mapRole = require("./../../helpers/roles/role_mapping");
+import { Router } from "express";
+import { Role } from "./../../models/roles/roles.model.js";
+import { roleMappingDetails } from "./../../helpers/roles/role_mapping.js";
+const router = Router();
 
 router
   .route("/")
   .get(function (req, res, next) {
-    roleModel.aggregate([{ $sort: { _id: -1 } }], function (err, address) {
+    Role.aggregate([{ $sort: { _id: -1 } }], function (err, address) {
       if (err) {
         return next(err);
       }
@@ -14,8 +14,8 @@ router
     });
   })
   .post(function (req, res, next) {
-    var newRole = new roleModel({});
-    var mappedRole = mapRole(newRole, req.body);
+    var newRole = new Role({});
+    var mappedRole = roleMappingDetails(newRole, req.body);
     mappedRole.save(function (err, saved) {
       if (err) {
         return next(err);
@@ -29,7 +29,7 @@ router
   .get(function (req, res, next) {
     var roleid = req.params.id;
 
-    roleModel.findById(roleid, function (err, roles) {
+    Role.findById(roleid, function (err, roles) {
       if (err) {
         return next(err);
       } else {
@@ -39,12 +39,12 @@ router
   })
   .put(function (req, res, next) {
     var roleid = req.params.id;
-    roleModel.findById(roleid, function (err, roles) {
+    Role.findById(roleid, function (err, roles) {
       if (err) {
         return next(err);
       }
       if (roles) {
-        var updatedroles = mapRole(roles, req.body);
+        var updatedroles = roleMappingDetails(roles, req.body);
         updatedroles.save(function (err, updated) {
           if (err) {
             return next(err);
@@ -61,7 +61,7 @@ router
   })
   .delete(function (req, res, next) {
     var roleid = req.params.id;
-    roleModel.findByIdAndDelete(roleid, function (err, roles) {
+    Role.findByIdAndDelete(roleid, function (err, roles) {
       if (err) {
         return next(err);
       } else {
@@ -70,4 +70,4 @@ router
     });
   });
 
-module.exports = router;
+export default router;

@@ -1,23 +1,21 @@
-var express = require("express");
-var router = express.Router();
-var brandModel = require("./../../models/brand/brand.model");
-var mapBrand = require("./../../helpers/brand/brand_mapping");
+import { Router } from "express";
+import { Brand } from "./../../models/brand/brand.model.js";
+import { brandMappingDetails } from "./../../helpers/brand/brand_mapping.js";
+const router = Router();
+import { ApiResponse } from "./../../utils/ApiResponse.js";
 
 router
   .route("/")
-  .get(function (req, res, next) {
-    brandModel.aggregate([{ $sort: { _id: -1 } }], function (err, address) {
-      if (err) {
-        return next(err);
-      }
-      res.status(200).json(address);
-    });
+  .get(async function (req, res, next) {
+    const branddetails = await Brand.aggregate([{ $sort: { _id: -1 } }]);
+    return res.status(201).json(new ApiResponse(200, branddetails, "Details"));
   })
   .post(function (req, res, next) {
     var newBrand = new brandModel({});
-    var mappedBrand = mapBrand(newBrand, req.body);
+    var mappedBrand = brandMappingDetails(newBrand, req.body);
     mappedBrand.save(function (err, saved) {
       if (err) {
+        console.log(err);
         return next(err);
       }
       res.status(200).json(saved);
@@ -29,7 +27,7 @@ router
   .get(function (req, res, next) {
     var brandid = req.params.id;
 
-    brandModel.findById(brandid, function (err, brand) {
+    Brand.findById(brandid, function (err, brand) {
       if (err) {
         return next(err);
       } else {
@@ -39,12 +37,12 @@ router
   })
   .put(function (req, res, next) {
     var brandid = req.params.id;
-    brandModel.findById(brandid, function (err, brand) {
+    Brand.findById(brandid, function (err, brand) {
       if (err) {
         return next(err);
       }
       if (brand) {
-        var updatedbrand = mapBrand(brand, req.body);
+        var updatedbrand = brandMappingDetails(brand, req.body);
         updatedbrand.save(function (err, updated) {
           if (err) {
             return next(err);
@@ -61,7 +59,7 @@ router
   })
   .delete(function (req, res, next) {
     var brandid = req.params.id;
-    brandModel.findByIdAndDelete(brandid, function (err, brand) {
+    Brand.findByIdAndDelete(brandid, function (err, brand) {
       if (err) {
         return next(err);
       } else {
@@ -70,4 +68,4 @@ router
     });
   });
 
-module.exports = router;
+export default router;

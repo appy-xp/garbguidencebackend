@@ -1,4 +1,4 @@
-module.exports = function roleMappingDetails(roles, rolesDetails) {
+function roleMappingDetails(roles, rolesDetails) {
   if (rolesDetails.roles) {
     roles.roles = rolesDetails.roles;
   }
@@ -6,4 +6,6 @@ module.exports = function roleMappingDetails(roles, rolesDetails) {
     roles.role_id = rolesDetails.role_id;
   }
   return roles;
-};
+}
+
+export { roleMappingDetails };

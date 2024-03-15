@@ -1,4 +1,4 @@
-module.exports = function staffMappingDetails(staffDet, staffDetails) {
+function staffMappingDetails(staffDet, staffDetails) {
   if (staffDetails.firstName) {
     staffDet.firstName = staffDetails.firstName;
   }
@@ -13,4 +13,6 @@ module.exports = function staffMappingDetails(staffDet, staffDetails) {
   }
 
   return staffDet;
-};
+}
+
+export { staffMappingDetails };

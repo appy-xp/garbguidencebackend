@@ -1,4 +1,4 @@
-module.exports = function sizeMappingDetails(sizeDet, sizeDetails) {
+function sizeMappingDetails(sizeDet, sizeDetails) {
   if (sizeDetails.sizeName) {
     sizeDet.sizeName = sizeDetails.sizeName;
   }
@@ -10,4 +10,6 @@ module.exports = function sizeMappingDetails(sizeDet, sizeDetails) {
   }
 
   return sizeDet;
-};
+}
+
+export { sizeMappingDetails };

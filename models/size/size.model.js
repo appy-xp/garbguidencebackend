@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const SizeSchema = new mongoose.Schema(
   {
@@ -20,6 +20,4 @@ const SizeSchema = new mongoose.Schema(
   }
 );
 
-const Size = mongoose.model("Size", SizeSchema);
-
-module.exports = Size;
+export const Size = mongoose.model("Size", SizeSchema);

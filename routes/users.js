@@ -1,9 +1,13 @@
-var express = require("express");
-var router = express.Router();
-var UserModel = require("./../models/users/user.model");
+import { Router } from "express";
+import {
+  loginUser,
+  logoutUser,
+  registerUser,
+} from "../controllers/user.controller.js";
+const router = Router();
 
-router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
-});
+router.route("/register").post(registerUser);
 
-module.exports = router;
+router.route("/login").post(loginUser);
+
+export default router;
