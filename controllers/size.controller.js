@@ -58,5 +58,13 @@ const getSize = asyncHandler(async (req, res) => {
   }
   return res.status(201).json(new ApiResponse(200, sizedata, "Size Details"));
 });
+const getSizebyid = asyncHandler(async (req, res) => {
+  const getid = req.params.id;
+  const sizedata = await Size.findById(getid);
+  if (!sizedata) {
+    throw new ApiError(500, "Something went wrong while registering User.");
+  }
+  return res.status(201).json(new ApiResponse(200, sizedata, "Size Details"));
+});
 
-export { addSize, updateSize, removeSize, getSize };
+export { addSize, updateSize, removeSize, getSize, getSizebyid };

@@ -58,5 +58,13 @@ const getStaff = asyncHandler(async (req, res) => {
   }
   return res.status(201).json(new ApiResponse(200, staffdata, "Staff Details"));
 });
+const getStaffbyid = asyncHandler(async (req, res) => {
+  const getid = req.params.id;
+  const staffdata = await Staff.findById(getid);
+  if (!staffdata) {
+    throw new ApiError(500, "Something went wrong while registering User.");
+  }
+  return res.status(201).json(new ApiResponse(200, staffdata, "Staff Details"));
+});
 
-export { addStaff, updateStaff, removeStaff, getStaff };
+export { addStaff, updateStaff, removeStaff, getStaff, getStaffbyid };
