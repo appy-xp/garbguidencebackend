@@ -23,6 +23,4 @@ const BOMSchema = new mongoose.Schema(
   }
 );
 
-const BOM = mongoose.model("Bom", BOMSchema);
-
-module.exports = BOM;
+export const BOM = mongoose.model("Bom", BOMSchema);

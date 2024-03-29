@@ -1,4 +1,4 @@
-export function bomMappingDetails(bomDet, bomDetails) {
+export function bomMappingDeta(bomDet, bomDetails) {
   if (bomDetails.quantity) {
     bomDet.quantity = bomDetails.quantity;
   }
