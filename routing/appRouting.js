@@ -5,6 +5,8 @@ import roleRouter from "./../routes/roles/roles.js";
 import sizeRouter from "./../routes/size/size.js";
 import staffRouter from "./../routes/staff/staff.js";
 import statusRouter from "./../routes/status/status.js";
+import bomRouter from "./../routes/bom/bom.js";
+import purchaseRouter from "./../routes/purchase/purchase.js";
 
 export default function (app) {
   app.use("/api/v1/user", userRouter);
@@ -14,4 +16,6 @@ export default function (app) {
   app.use("/api/v1/size", sizeRouter);
   app.use("/api/v1/staff", staffRouter);
   app.use("/api/v1/status", statusRouter);
+  app.use("/api/v1/bom", bomRouter);
+  app.use("/api/v1/purchase", purchaseRouter);
 }

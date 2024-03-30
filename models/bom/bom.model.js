@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+
 const BOMDetailsSchema = new mongoose.Schema({
   quantity: {
     type: Number,
@@ -22,5 +23,11 @@ const BOMSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
+BOMSchema.pre("validate", async function (next) {
+  if (this.bomdetails.length == 0 || !this.bomdetails) {
+    return next(new ApiError(401, "Details cannot be null."));
+  } else {
+    next();
+  }
+});
 export const BOM = mongoose.model("Bom", BOMSchema);
