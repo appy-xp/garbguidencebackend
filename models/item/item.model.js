@@ -30,6 +30,10 @@ const ItemSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Status",
     },
+    staffId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Staff",
+    },
   },
   {
     timestamps: true,

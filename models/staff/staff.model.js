@@ -14,10 +14,6 @@ const StaffSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    statusId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Status",
-    },
   },
   {
     timestamps: true,

@@ -113,7 +113,9 @@ const logoutUser = asyncHandler(async (req, res) => {
 
 const refreshAccessToken = asyncHandler(async (req, res) => {
   const incomingRefreshToken =
-    req.cookies.refreshToken || req.body.refreshToken;
+    req.cookies.refreshToken ||
+    req.body.refreshToken ||
+    req.header("Authorization")?.replace("Bearer", "");
   if (!incomingRefreshToken) {
     throw new ApiError(401, "unauthorized request");
   }
@@ -122,13 +124,12 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       incomingRefreshToken,
       process.env.REFRESH_TOKEN_SECRET
     );
-
-    const user = await User.findById(decodedToken?._id);
+    const user = await User.findById(decodedToken?._id).select("-password");
 
     if (!user) {
       throw new ApiError(401, "Invalid refresh token");
     }
-    if (incomingRefreshToken !== user.refreshToken) {
+    if (incomingRefreshToken !== user?.refreshToken) {
       throw new ApiError(401, "Token is expired or used");
     }
 
@@ -137,17 +138,18 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       secure: true,
     };
 
-    const { accessToken, newrefreshToken } =
-      await generateAccessAndRefreshToken(user._id);
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+      user._id
+    );
 
     return res
       .status(200)
       .cookie("accessToken", accessToken, options)
-      .cookie("refreshToken", newrefreshToken, options)
+      .cookie("refreshToken", refreshToken, options)
       .json(
         new ApiResponse(
           200,
-          { accessToken, refreshToken: newrefreshToken },
+          { user: user, accessToken, refreshToken },
           "Access token refreshed"
         )
       );
@@ -156,4 +158,13 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, loginUser, logoutUser, refreshAccessToken };
+const getAllUser = asyncHandler(async (req, res) => {
+  const userdata = await User.find()
+    .sort({ _id: -1 })
+    .select("-password -refreshToken");
+  if (!userdata) {
+    throw new ApiError(500, "Data Not Found");
+  }
+  return res.status(201).json(new ApiResponse(200, userdata, "User Details"));
+});
+export { registerUser, loginUser, logoutUser, refreshAccessToken, getAllUser };
