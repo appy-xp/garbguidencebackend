@@ -13,4 +13,7 @@ const BrandSchema = new mongoose.Schema(
   }
 );
 
-export const Brand = mongoose.model("Brand", BrandSchema);
+const Brand = mongoose.model("Brand", BrandSchema);
+const Brand1 = mongoose.model("dbo_Brand", BrandSchema);
+
+export { Brand, Brand1 };

@@ -44,4 +44,7 @@ const StatusSchema = new mongoose.Schema(
   }
 );
 
-export const Status = mongoose.model("Status", StatusSchema);
+const Status = mongoose.model("Status", StatusSchema);
+const Status1 = mongoose.model("dbo_Status", StatusSchema);
+
+export { Status, Status1 };

@@ -22,6 +22,7 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
+
     refreshToken: {
       type: String,
     },
@@ -61,5 +62,7 @@ UserSchema.methods.generateRefreshToken = function () {
     { expiresIn: process.env.REFRESH_TOKEN_EXPIRYT }
   );
 };
+const User1 = mongoose.model("User", UserSchema);
+const User2 = mongoose.model("dbo_user", UserSchema);
 
-export const User = mongoose.model("User", UserSchema);
+export { User1, User2 };

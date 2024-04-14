@@ -1,12 +1,12 @@
 import { asyncHandler } from "./../utils/asyncHandler.js";
 import { ApiError } from "./../utils/ApiError.js";
-import { User } from "./../models/users/user.model.js";
+import { User1, User2 } from "./../models/users/user.model.js";
 import { ApiResponse } from "./../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {
-    const user = await User.findById(userId);
+    const user = await User1.findById(userId);
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
     user.refreshToken = refreshToken;
@@ -27,7 +27,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "All fields are required.");
   }
 
-  const existedUser = await User.findOne({
+  const existedUser = await User1.findOne({
     $or: [{ username }, { email }],
   });
   // console.log("existed username>>>", existedUser);
@@ -35,17 +35,23 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new ApiError(409, "User with email or username already exists.");
   }
 
-  const user = await User.create({
+  const user = await User1.create({
     email,
     password,
     username: username.toLowerCase(),
   });
-  const createdUser = await User.findById(user._id).select(
+  const createdUser = await User1.findById(user._id).select(
     "-password -refreshToken"
   );
   if (!createdUser) {
     throw new ApiError(500, "Something went wrong while registering User.");
   }
+  const dupUser = await User2.create({
+    _id: user._id,
+    email,
+    password,
+    username: username.toLowerCase(),
+  });
   return res
     .status(201)
     .json(new ApiResponse(200, createdUser, "User registered successfully"));
@@ -57,7 +63,7 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!username && !email) {
     throw new ApiError(400, "username or email is required");
   }
-  const user = await User.findOne({
+  const user = await User1.findOne({
     $or: [{ username }, { email }],
   });
   console.log("found user>", user);
@@ -71,7 +77,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
     user._id
   );
-  const loggedInUser = await User.findById(user._id).select(
+  const loggedInUser = await User1.findById(user._id).select(
     "-password -refreshToken"
   );
   const options = {
@@ -93,7 +99,7 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  await User.findByIdAndUpdate(
+  await User1.findByIdAndUpdate(
     req.user._id,
     {
       $set: { refreshTOken: undefined },
@@ -159,7 +165,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 });
 
 const getAllUser = asyncHandler(async (req, res) => {
-  const userdata = await User.find()
+  const userdata = await User1.find()
     .sort({ _id: -1 })
     .select("-password -refreshToken");
   if (!userdata) {

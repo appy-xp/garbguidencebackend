@@ -31,5 +31,7 @@ PurchaseSchema.pre("validate", async function (next) {
     next();
   }
 });
+const Purchase = mongoose.model("Purchase", PurchaseSchema);
+const Purchase1 = mongoose.model("dbo_Purchase", PurchaseSchema);
 
-export const Purchase = mongoose.model("Purchase", PurchaseSchema);
+export { Purchase, Purchase1 };

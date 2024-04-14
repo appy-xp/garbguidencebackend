@@ -40,4 +40,7 @@ const ItemSchema = new mongoose.Schema(
   }
 );
 
-export const Item = mongoose.model("Item", ItemSchema);
+const Item = mongoose.model("Item", ItemSchema);
+const Item1 = mongoose.model("dbo_Item", ItemSchema);
+
+export { Item, Item1 };

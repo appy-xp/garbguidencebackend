@@ -20,4 +20,7 @@ const SizeSchema = new mongoose.Schema(
   }
 );
 
-export const Size = mongoose.model("Size", SizeSchema);
+const Size = mongoose.model("Size", SizeSchema);
+const Size1 = mongoose.model("dbo_Size", SizeSchema);
+
+export { Size, Size1 };

@@ -30,4 +30,7 @@ BOMSchema.pre("validate", async function (next) {
     next();
   }
 });
-export const BOM = mongoose.model("Bom", BOMSchema);
+
+const BOM = mongoose.model("Bom", BOMSchema);
+const BOM1 = mongoose.model("dbo_Bom", BOMSchema);
+export { BOM, BOM1 };
