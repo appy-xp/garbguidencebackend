@@ -3,6 +3,7 @@ import { ApiError } from "./../utils/ApiError.js";
 import { User1, User2 } from "./../models/users/user.model.js";
 import { ApiResponse } from "./../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
+import assert from "assert";
 
 const generateAccessAndRefreshToken = async (userId) => {
   try {

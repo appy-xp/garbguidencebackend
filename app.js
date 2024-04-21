@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import connectDB from "./config/config.mongoose.js";
 import AppRouting from "./routing/appRouting.js";
+import path from "path";
 
 dotenv.config({
   path: "./.env",
@@ -18,7 +19,9 @@ app.use(
 
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
-app.use(express.static("public"));
+// app.use(express.static("public"));
+app.use(express.static(path.join("public")));
+app.use("/data", express.static(path.join("public")));
 app.use(cookieParser());
 
 connectDB()

@@ -3,13 +3,15 @@ import { ApiError } from "./../utils/ApiError.js";
 import { ApiResponse } from "./../utils/ApiResponse.js";
 import { Item, Item1 } from "./../models/item/item.model.js";
 import { itemMappingDetails } from "./../helpers/item/item_mapping.js";
+import assert from "assert";
 
 const addItem = asyncHandler(async (req, res) => {
   let session = null;
   const newDetails = new Item({});
   const mappedDetails = itemMappingDetails(newDetails, req.body);
+  console.log("item mapped>>", mappedDetails);
   return Item.createCollection()
-    .then(async () => await Size.startSession())
+    .then(async () => await Item.startSession())
     .then(async (_session) => {
       session = _session;
       session.startTransaction();
@@ -28,8 +30,9 @@ const addItem = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "Item created successfully"))
     )
     .catch((err) => {
-      session.abortTransaction();
       console.log("error is>>", err);
+      session.abortTransaction();
+
       throw new ApiError(500, "Something went wrong while Item.");
     });
   // const size = await Item.create(mappedDetails);

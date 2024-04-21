@@ -5,6 +5,9 @@ export function bomMappingDetails(bomDet, bomDetails) {
   if (bomDetails.bomdetails) {
     bomDet.bomdetails = bomDetails.bomdetails;
   }
+  if (bomDetails.image) {
+    bomDet.image = bomDetails.image;
+  }
 
   return bomDet;
 }

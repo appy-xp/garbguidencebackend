@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import passwordHash from "password-hash";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -34,13 +34,13 @@ const UserSchema = new mongoose.Schema(
 
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 8);
+  this.password = await passwordHash.generate(this.password);
   console.log("password", this.password);
   next();
 });
 
 UserSchema.methods.isPasswordCorrect = async function (password) {
-  return await bcrypt.compare(password, this.password);
+  return await passwordHash.verify(password, this.password);
 };
 UserSchema.methods.generateAccessToken = function () {
   return jwt.sign(

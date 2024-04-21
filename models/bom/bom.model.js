@@ -18,6 +18,9 @@ const BOMSchema = new mongoose.Schema(
       required: true,
     },
     bomdetails: [BOMDetailsSchema],
+    image: {
+      type: String,
+    },
   },
   {
     timestamps: true,

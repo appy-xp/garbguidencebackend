@@ -5,16 +5,23 @@ import { BOM, BOM1 } from "./../models/bom/bom.model.js";
 import { bomMappingDetails } from "./../helpers/bom/bom_mapping.js";
 import { bomMappingDeta } from "./../helpers/bom/bomdetails_mapping.js";
 import assert from "assert";
+import qr from "qr-image";
+import fs from "fs";
+import { removeFile } from "./../utils/file_unlink.js";
+import { qrImgPath } from "./../utils/file_locationenvironment.js";
 
 const addBom = asyncHandler(async (req, res) => {
   let session = null;
   const newDetails = new BOM({});
   const mappedDetails = bomMappingDetails(newDetails, req.body);
+  const qrfilename = await generateQR(mappedDetails._id.toString());
+  mappedDetails.image = qrfilename;
   return BOM.createCollection()
     .then(async () => await BOM.startSession())
     .then(async (_session) => {
       session = _session;
       session.startTransaction();
+
       await BOM1.create([mappedDetails], { session: session });
       return BOM.create([mappedDetails], { session: session });
     })
@@ -31,6 +38,7 @@ const addBom = asyncHandler(async (req, res) => {
     )
     .catch((err) => {
       session.abortTransaction();
+      removeFile(qrImgPath + "/" + qrfilename);
       console.log("error is>>", err);
       throw new ApiError(500, "Something went wrong while registering User.");
     });
@@ -90,7 +98,8 @@ const updateBom = asyncHandler(async (req, res) => {
 });
 const deleteBom = asyncHandler(async (req, res) => {
   const removalid = req.params.id;
-  const founddata = await Purchase.findById(removalid);
+  const founddata = await BOM.findById(removalid);
+  console.log("found data>>", founddata);
   let session = null;
   if (!founddata) {
     throw new ApiError(500, "Details doesnot exist.");
@@ -106,9 +115,12 @@ const deleteBom = asyncHandler(async (req, res) => {
       .then((doc) => assert.ok(doc))
       .then(() => session.commitTransaction())
       .then(() => session.endSession())
-      .then(() =>
-        res.status(201).json(new ApiResponse(200, {}, "Size Details deleted"))
-      )
+      .then(() => {
+        removeFile(qrImgPath + "/" + founddata.image);
+        return res
+          .status(201)
+          .json(new ApiResponse(200, {}, "Size Details deleted"));
+      })
       .catch((err) => {
         session.abortTransaction();
         console.log("error is>>", err);
@@ -168,4 +180,24 @@ const getBombyid = asyncHandler(async (req, res) => {
   }
   return res.status(201).json(new ApiResponse(200, bomData, "BOM Details"));
 });
+const generateQR = async (id) => {
+  const getid = id;
+  try {
+    var qr_png = qr.image(getid, { type: "png" });
+    var filename = new Date().getTime() + getid + ".png";
+    qr_png.pipe(fs.createWriteStream(qrImgPath + "/" + filename));
+    return filename;
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(500, "Something went wrong while registering BOM.");
+  }
+
+  // qr.image(getid)
+  //   .then((url) => {
+  //     return res.status(201).json(new ApiResponse(200, url, "BOM Details"));
+  //   })
+  //   .catch((err) => {
+  //     throw new ApiError(500, "Something went wrong while registering BOM.");
+  //   });
+};
 export { addBom, updateBom, deleteBom, getBom, getBombyid };
