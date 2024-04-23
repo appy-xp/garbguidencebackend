@@ -5,7 +5,7 @@ const StatusSchema = new mongoose.Schema(
     isAssigned: {
       type: Boolean,
       enum: [true, false],
-      default: false,
+      default: true,
       required: true,
     },
     isReceived: {

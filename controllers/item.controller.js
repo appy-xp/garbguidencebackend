@@ -4,18 +4,26 @@ import { ApiResponse } from "./../utils/ApiResponse.js";
 import { Item, Item1 } from "./../models/item/item.model.js";
 import { itemMappingDetails } from "./../helpers/item/item_mapping.js";
 import assert from "assert";
+import { Status, Status1 } from "./../models/status/status.model.js";
+import { statusMappingDetails } from "./../helpers/status/status_mapping.js";
 
 const addItem = asyncHandler(async (req, res) => {
   let session = null;
   const newDetails = new Item({});
   const mappedDetails = itemMappingDetails(newDetails, req.body);
+  const newStatusDetails = new Status1({});
+  const mappedStatusDetails = statusMappingDetails(newStatusDetails, {});
+  mappedDetails.statusId = mappedStatusDetails._id;
   console.log("item mapped>>", mappedDetails);
+  console.log("status mapped>>", mappedStatusDetails);
   return Item.createCollection()
     .then(async () => await Item.startSession())
     .then(async (_session) => {
       session = _session;
       session.startTransaction();
       await Item1.create([mappedDetails], { session: session });
+      await Status.create([mappedStatusDetails], { session: session });
+      await Status1.create([mappedStatusDetails], { session: session });
       return Item.create([mappedDetails], { session: session });
     })
     .then((sizedet) => Item.findById(sizedet[0]._id).session(session))

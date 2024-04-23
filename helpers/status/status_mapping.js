@@ -17,11 +17,8 @@ function statusMappingDetails(statusDet, statusDetails) {
   if (statusDetails.isDispatched) {
     statusDet.isDispatched = statusDetails.isDispatched;
   }
-  if (statusDetails.itemId) {
-    statusDet.itemId = statusDetails.itemId;
-  }
-  if (statusDetails.staffId) {
-    statusDet.staffId = statusDetails.staffId;
+  if (statusDetails._id) {
+    statusDet._id = statusDetails._id;
   }
 
   return statusDet;

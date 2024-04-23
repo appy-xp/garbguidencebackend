@@ -145,6 +145,7 @@ const getBom = asyncHandler(async (req, res) => {
       session = _session;
       session.startTransaction();
       const sizedet = await BOM.find().sort({ _id: -1 }).session(session);
+      console.log("get bom>>>", sizedet);
       const sizedupdet = await BOM1.find().sort({ _id: -1 }).session(session);
       if (sizedet.length || sizedupdet.length) {
         return sizedet;
@@ -155,12 +156,33 @@ const getBom = asyncHandler(async (req, res) => {
     .then((doc) => assert.ok(doc))
     .then(() => session.commitTransaction())
     .then(() => session.endSession())
-    .then(() => BOM.find().sort({ _id: -1 }))
-    .then((det) =>
+    .then(() =>
+      BOM.aggregate([
+        { $sort: { _id: -1 } },
+        {
+          $lookup: {
+            from: "items",
+            localField: "_id",
+            foreignField: "bomId",
+            as: "itemdata",
+          },
+        },
+      ])
+    )
+    .then((det) => {
+      const dataToSend = det.map((e) => {
+        if (e.itemdata.length) {
+          e.allowAssign = true;
+        } else {
+          e.allowAssign = false;
+        }
+        return e;
+      });
+      console.log("my datatoSend>>>", dataToSend);
       res
         .status(201)
-        .json(new ApiResponse(200, det, "Size details successfully"))
-    )
+        .json(new ApiResponse(200, det, "Size details successfully"));
+    })
     .catch((err) => {
       session.abortTransaction();
       console.log("error is>>", err);

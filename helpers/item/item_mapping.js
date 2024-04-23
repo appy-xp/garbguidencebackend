@@ -20,6 +20,9 @@ function itemMappingDetails(itemDet, itemDetails) {
   if (itemDetails.statusId) {
     itemDet.statusId = itemDetails.statusId;
   }
+  if (itemDetails.staffId) {
+    itemDet.staffId = itemDetails.staffId;
+  }
 
   return itemDet;
 }
