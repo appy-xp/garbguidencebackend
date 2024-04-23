@@ -155,12 +155,21 @@ const getPurchase = asyncHandler(async (req, res) => {
     .then((doc) => assert.ok(doc))
     .then(() => session.commitTransaction())
     .then(() => session.endSession())
-    .then(() => Purchase.find().sort({ _id: -1 }))
-    .then((det) =>
-      res
-        .status(201)
-        .json(new ApiResponse(200, det, "Size details successfully"))
+    .then(() =>
+      Purchase.aggregate([
+        { $sort: { _id: -1 } },
+        { $addFields: { stock: { $sum: ["$purchaseDetails.quantity"] } } },
+      ])
     )
+    .then((det) => {
+      const dataToSend = det.map((e) => {
+        e.unit = e.purchaseDetails[0].unit;
+        return e;
+      });
+      return res
+        .status(201)
+        .json(new ApiResponse(200, dataToSend, "Size details successfully"));
+    })
     .catch((err) => {
       session.abortTransaction();
       console.log("error is>>", err);

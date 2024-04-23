@@ -17,6 +17,6 @@ export default function (app) {
   app.use("/api/v1/size", verifyJWT, sizeRouter);
   app.use("/api/v1/staff", verifyJWT, staffRouter);
   app.use("/api/v1/status", verifyJWT, statusRouter);
-  app.use("/api/v1/bom", bomRouter);
+  app.use("/api/v1/bom", verifyJWT, bomRouter);
   app.use("/api/v1/purchase", verifyJWT, purchaseRouter);
 }

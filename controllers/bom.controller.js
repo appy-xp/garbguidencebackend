@@ -171,17 +171,17 @@ const getBom = asyncHandler(async (req, res) => {
     )
     .then((det) => {
       const dataToSend = det.map((e) => {
-        if (e.itemdata.length) {
+        if (!e.itemdata.length) {
           e.allowAssign = true;
         } else {
           e.allowAssign = false;
         }
         return e;
       });
-      console.log("my datatoSend>>>", dataToSend);
+
       res
         .status(201)
-        .json(new ApiResponse(200, det, "Size details successfully"));
+        .json(new ApiResponse(200, dataToSend, "Size details successfully"));
     })
     .catch((err) => {
       session.abortTransaction();

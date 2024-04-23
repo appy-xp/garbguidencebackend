@@ -51,6 +51,7 @@ const updateStatus = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Details doesnot exist.");
   } else {
     const mappedDetails = statusMappingDetails(founddetails, req.body);
+    console.log("mapped status>>>", mappedDetails, req.body);
     return Status.createCollection()
       .then(async () => await Status.startSession())
       .then(async (_session) => {
@@ -174,4 +175,72 @@ const getStatusbyid = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, statusdata, "Status Details"));
 });
 
-export { addStatus, updateStatus, deleteStatus, getStatus, getStatusbyid };
+const getitemStatus = asyncHandler(async (req, res) => {
+  let session = null;
+  return Status.createCollection()
+    .then(async () => await Status.startSession())
+    .then(async (_session) => {
+      session = _session;
+      session.startTransaction();
+      const sizedet = await Status.find().sort({ _id: -1 }).session(session);
+      const sizedupdet = await Status1.find()
+        .sort({ _id: -1 })
+        .session(session);
+      if (sizedet.length || sizedupdet.length) {
+        return sizedet;
+      } else {
+        throw new ApiError(500, "Something went wrong ");
+      }
+    })
+    .then((doc) => assert.ok(doc))
+    .then(() => session.commitTransaction())
+    .then(() => session.endSession())
+    .then(() =>
+      Status.aggregate([
+        { $sort: { _id: -1 } },
+        {
+          $lookup: {
+            from: "items",
+            localField: "_id",
+            foreignField: "statusId",
+            as: "itemdata",
+          },
+        },
+      ])
+    )
+    .then((det) => {
+      {
+        const dataToSend = det.map((e) => {
+          e.name = e.itemdata[0].itemName;
+          if (e.isAssigned) {
+            e.assignedlogo = `<i class="fa-solid fa-circle-check"
+              style="background-color:green"
+            ></i>`;
+          } else {
+            e.assignedlogo = `<i
+              class="fa-solid fa-check"
+              style="background-color:lightgray"
+            ></i>`;
+          }
+          return e;
+        });
+        res
+          .status(201)
+          .json(new ApiResponse(200, dataToSend, "Size details successfully"));
+      }
+    })
+    .catch((err) => {
+      session.abortTransaction();
+      console.log("error is>>", err);
+      throw new ApiError(500, "Something went wrong while registering User.");
+    });
+});
+
+export {
+  addStatus,
+  updateStatus,
+  deleteStatus,
+  getStatus,
+  getStatusbyid,
+  getitemStatus,
+};
