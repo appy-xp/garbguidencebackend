@@ -31,7 +31,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const existedUser = await User1.findOne({
     $or: [{ username }, { email }],
   });
-  // console.log("existed username>>>", existedUser);
+
   if (existedUser) {
     throw new ApiError(409, "User with email or username already exists.");
   }
@@ -60,14 +60,13 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
 
-  console.log("req body>>", req.body, email);
   if (!username && !email) {
     throw new ApiError(400, "username or email is required");
   }
   const user = await User1.findOne({
     $or: [{ username }, { email }],
   });
-  console.log("found user>", user);
+
   if (!user) {
     throw new ApiError(404, "User doesnot exist");
   }

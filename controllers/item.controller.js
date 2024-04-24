@@ -14,8 +14,6 @@ const addItem = asyncHandler(async (req, res) => {
   const newStatusDetails = new Status1({});
   const mappedStatusDetails = statusMappingDetails(newStatusDetails, {});
   mappedDetails.statusId = mappedStatusDetails._id;
-  console.log("item mapped>>", mappedDetails);
-  console.log("status mapped>>", mappedStatusDetails);
   return Item.createCollection()
     .then(async () => await Item.startSession())
     .then(async (_session) => {
@@ -38,21 +36,10 @@ const addItem = asyncHandler(async (req, res) => {
         .json(new ApiResponse(200, {}, "Item created successfully"))
     )
     .catch((err) => {
-      console.log("error is>>", err);
       session.abortTransaction();
 
       throw new ApiError(500, "Something went wrong while Item.");
     });
-  // const size = await Item.create(mappedDetails);
-  // const createdDetails = await Item.findById(size._id).select(
-  //   "-sizeId -brandId -bomId -statusId"
-  // );
-  // if (!createdDetails) {
-  //   throw new ApiError(500, "Something went wrong while registering Item.");
-  // }
-  // return res
-  //   .status(201)
-  //   .json(new ApiResponse(200, createdDetails, "Item created successfully"));
 });
 const updateItem = asyncHandler(async (req, res) => {
   const updateid = req.params.id;
@@ -84,18 +71,9 @@ const updateItem = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while deleting Item.");
       });
-    // await Item.findByIdAndUpdate({ _id: mappedDetails._id }, mappedDetails)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, mappedDetails, "Item Details updated"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const removeItem = asyncHandler(async (req, res) => {
@@ -121,19 +99,9 @@ const removeItem = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while deleting Item.");
       });
-
-    // await Item.findByIdAndDelete(removalid)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, success, "Item Details deleted"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const getItem = asyncHandler(async (req, res) => {
@@ -162,14 +130,9 @@ const getItem = asyncHandler(async (req, res) => {
     )
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
-  // const itemdata = await Item.find().sort({ _id: -1 });
-  // if (!itemdata) {
-  //   throw new ApiError(500, "Something went wrong while registering Item.");
-  // }
-  // return res.status(201).json(new ApiResponse(200, itemdata, "Item Details"));
 });
 const getItembyid = asyncHandler(async (req, res) => {
   const getid = req.params.id;
@@ -179,5 +142,185 @@ const getItembyid = asyncHandler(async (req, res) => {
   }
   return res.status(201).json(new ApiResponse(200, itemdata, "Item Details"));
 });
+const getStaffItem = asyncHandler(async (req, res) => {
+  let session = null;
+  return Item.createCollection()
+    .then(async () => await Item.startSession())
+    .then(async (_session) => {
+      session = _session;
+      session.startTransaction();
+      const sizedet = await Item.find().sort({ _id: -1 }).session(session);
+      const sizedupdet = await Item1.find().sort({ _id: -1 }).session(session);
+      if (sizedet.length || sizedupdet.length) {
+        return sizedet;
+      } else {
+        throw new ApiError(500, "Something went wrong ");
+      }
+    })
+    .then((doc) => assert.ok(doc))
+    .then(() => session.commitTransaction())
+    .then(() => session.endSession())
+    .then(() =>
+      Item.aggregate([
+        { $sort: { _id: -1 } },
+        {
+          $lookup: {
+            from: "staffs",
+            localField: "staffId",
+            foreignField: "_id",
+            as: "staffitem",
+          },
+        },
+        {
+          $lookup: {
+            from: "boms",
+            localField: "bomId",
+            foreignField: "_id",
+            as: "bomitem",
+          },
+        },
+      ])
+    )
+    .then((det) => {
+      const dataToSend = det.map((e) => {
+        e.staffname = e.staffitem[0].firstName + " " + e.staffitem[0].lastName;
+        e.bomName = e.bomitem[0].modelName;
+        return e;
+      });
+      res
+        .status(201)
+        .json(new ApiResponse(200, dataToSend, "Size details successfully"));
+    })
+    .catch((err) => {
+      session.abortTransaction();
 
-export { addItem, updateItem, removeItem, getItem, getItembyid };
+      throw new ApiError(500, "Something went wrong while registering User.");
+    });
+});
+const getpendingItems = asyncHandler(async (req, res) => {
+  let session = null;
+  return Item.createCollection()
+    .then(async () => await Item.startSession())
+    .then(async (_session) => {
+      session = _session;
+      session.startTransaction();
+      const sizedet = await Item.find().sort({ _id: -1 }).session(session);
+      const sizedupdet = await Item1.find().sort({ _id: -1 }).session(session);
+      if (sizedet.length || sizedupdet.length) {
+        return sizedet;
+      } else {
+        throw new ApiError(500, "Something went wrong ");
+      }
+    })
+    .then((doc) => assert.ok(doc))
+    .then(() => session.commitTransaction())
+    .then(() => session.endSession())
+    .then(() =>
+      Item.aggregate([
+        { $sort: { _id: -1 } },
+        {
+          $lookup: {
+            from: "brands",
+            localField: "brandId",
+            foreignField: "_id",
+            as: "branddet",
+          },
+        },
+        {
+          $lookup: {
+            from: "sizes",
+            localField: "sizeId",
+            foreignField: "_id",
+            as: "sizedet",
+          },
+        },
+        {
+          $lookup: {
+            from: "status",
+            localField: "statusId",
+            foreignField: "_id",
+            as: "statusdet",
+          },
+        },
+        { $match: { "statusdet.isDispatched": false } },
+      ])
+    )
+    .then(async (det) =>
+      res.status(201).json(new ApiResponse(200, det, "Pending item list"))
+    )
+    .catch((err) => {
+      session.abortTransaction();
+
+      throw new ApiError(500, "Something went wrong while registering User.");
+    });
+});
+const getcompletedItems = asyncHandler(async (req, res) => {
+  let session = null;
+  return Item.createCollection()
+    .then(async () => await Item.startSession())
+    .then(async (_session) => {
+      session = _session;
+      session.startTransaction();
+      const sizedet = await Item.find().sort({ _id: -1 }).session(session);
+      const sizedupdet = await Item1.find().sort({ _id: -1 }).session(session);
+      if (sizedet.length || sizedupdet.length) {
+        return sizedet;
+      } else {
+        throw new ApiError(500, "Something went wrong ");
+      }
+    })
+    .then((doc) => assert.ok(doc))
+    .then(() => session.commitTransaction())
+    .then(() => session.endSession())
+    .then(() =>
+      Item.aggregate([
+        { $sort: { _id: -1 } },
+        {
+          $lookup: {
+            from: "brands",
+            localField: "brandId",
+            foreignField: "_id",
+            as: "branddet",
+          },
+        },
+        {
+          $lookup: {
+            from: "sizes",
+            localField: "sizeId",
+            foreignField: "_id",
+            as: "sizedet",
+          },
+        },
+        {
+          $lookup: {
+            from: "status",
+            localField: "statusId",
+            foreignField: "_id",
+            as: "statusdet",
+          },
+        },
+        { $match: { "statusdet.isDispatched": true } },
+      ])
+    )
+    .then((det) =>
+      res
+        .status(201)
+        .json(new ApiResponse(200, det, "Size details successfully"))
+    )
+    .catch((err) => {
+      session.abortTransaction();
+
+      throw new ApiError(500, "Something went wrong while registering User.");
+    });
+});
+
+export {
+  addItem,
+  updateItem,
+  removeItem,
+  getItem,
+  getItembyid,
+  getStaffItem,
+  getpendingItems,
+  getcompletedItems,
+};

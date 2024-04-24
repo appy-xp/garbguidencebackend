@@ -31,17 +31,9 @@ const addStatus = asyncHandler(async (req, res) => {
     )
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
-  // const size = await Status.create(mappedDetails);
-  // const createdDetails = await Status.findById(size._id);
-  // if (!createdDetails) {
-  //   throw new ApiError(500, "Something went wrong while registering User.");
-  // }
-  // return res
-  //   .status(201)
-  //   .json(new ApiResponse(200, createdDetails, "Status created successfully"));
 });
 const updateStatus = asyncHandler(async (req, res) => {
   const updateid = req.params.id;
@@ -51,7 +43,7 @@ const updateStatus = asyncHandler(async (req, res) => {
     throw new ApiError(500, "Details doesnot exist.");
   } else {
     const mappedDetails = statusMappingDetails(founddetails, req.body);
-    console.log("mapped status>>>", mappedDetails, req.body);
+
     return Status.createCollection()
       .then(async () => await Status.startSession())
       .then(async (_session) => {
@@ -74,18 +66,9 @@ const updateStatus = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while deleting Size.");
       });
-    // await Status.findByIdAndUpdate({ _id: mappedDetails._id }, mappedDetails)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, mappedDetails, "Status Details updated"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const deleteStatus = asyncHandler(async (req, res) => {
@@ -111,18 +94,9 @@ const deleteStatus = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while deleting Size.");
       });
-    // await Status.findByIdAndDelete(removalid)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, success, "Status Details deleted"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const getStatus = asyncHandler(async (req, res) => {
@@ -153,16 +127,9 @@ const getStatus = asyncHandler(async (req, res) => {
     )
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
-  // const statusdata = await Status.find().sort({ _id: -1 });
-  // if (!statusdata) {
-  //   throw new ApiError(500, "Something went wrong while registering Status.");
-  // }
-  // return res
-  //   .status(201)
-  //   .json(new ApiResponse(200, statusdata, "Status Details"));
 });
 const getStatusbyid = asyncHandler(async (req, res) => {
   const getid = req.params.id;
@@ -231,9 +198,20 @@ const getitemStatus = asyncHandler(async (req, res) => {
     })
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
+});
+const getfinished = asyncHandler(async (req, res) => {
+  const statusdata = await Status.findOne({
+    isDispatched: true,
+  }).countDocuments();
+  if (!statusdata) {
+    throw new ApiError(500, "Something went wrong while registering Status.");
+  }
+  return res
+    .status(201)
+    .json(new ApiResponse(200, statusdata, "Status Details"));
 });
 
 export {
@@ -243,4 +221,5 @@ export {
   getStatus,
   getStatusbyid,
   getitemStatus,
+  getfinished,
 };

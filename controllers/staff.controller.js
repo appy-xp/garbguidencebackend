@@ -30,17 +30,9 @@ const addStaff = asyncHandler(async (req, res) => {
     )
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
-  // const staff = await Staff.create(mappedDetails);
-  // const createdDetails = await Staff.findById(staff._id).select("-statusId");
-  // if (!createdDetails) {
-  //   throw new ApiError(500, "Something went wrong while registering User.");
-  // }
-  // return res
-  //   .status(201)
-  //   .json(new ApiResponse(200, createdDetails, "Staff created successfully"));
 });
 const updateStaff = asyncHandler(async (req, res) => {
   const updateid = req.params.id;
@@ -72,18 +64,9 @@ const updateStaff = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while deleting Size.");
       });
-    // await Staff.findByIdAndUpdate({ _id: mappedDetails._id }, mappedDetails)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, mappedDetails, "Staff Details updated"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const removeStaff = asyncHandler(async (req, res) => {
@@ -109,18 +92,9 @@ const removeStaff = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while deleting Size.");
       });
-    // await Staff.findByIdAndDelete(removalid)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, success, "Staff Details deleted"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const getStaff = asyncHandler(async (req, res) => {
@@ -149,14 +123,9 @@ const getStaff = asyncHandler(async (req, res) => {
     )
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
-  // const staffdata = await Staff.find().sort({ _id: -1 });
-  // if (!staffdata) {
-  //   throw new ApiError(500, "Something went wrong while registering User.");
-  // }
-  // return res.status(201).json(new ApiResponse(200, staffdata, "Staff Details"));
 });
 const getStaffbyid = asyncHandler(async (req, res) => {
   const getid = req.params.id;
@@ -166,5 +135,19 @@ const getStaffbyid = asyncHandler(async (req, res) => {
   }
   return res.status(201).json(new ApiResponse(200, staffdata, "Staff Details"));
 });
+const gettotalStaffs = asyncHandler(async (req, res) => {
+  const staffdata = await Staff.find().countDocuments();
+  if (!staffdata) {
+    throw new ApiError(500, "Something went wrong while registering User.");
+  }
+  return res.status(201).json(new ApiResponse(200, staffdata, "Staff Details"));
+});
 
-export { addStaff, updateStaff, removeStaff, getStaff, getStaffbyid };
+export {
+  addStaff,
+  updateStaff,
+  removeStaff,
+  getStaff,
+  getStaffbyid,
+  gettotalStaffs,
+};

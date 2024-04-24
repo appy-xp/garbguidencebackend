@@ -30,17 +30,9 @@ const addSize = asyncHandler(async (req, res) => {
     )
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
-
-  // const createdDetails = await Size.findById(size._id).select("-sizeDetail");
-  // if (!createdDetails) {
-  //   throw new ApiError(500, "Something went wrong while registering User.");
-  // }
-  // return res
-  //   .status(201)
-  //   .json(new ApiResponse(200, createdDetails, "Size created successfully"));
 });
 const updateSize = asyncHandler(async (req, res) => {
   const updateid = req.params.id;
@@ -73,19 +65,9 @@ const updateSize = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while deleting Size.");
       });
-
-    // await Size.findByIdAndUpdate({ _id: mappedDetails._id }, mappedDetails)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, mappedDetails, "Size Details updated"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const removeSize = asyncHandler(async (req, res) => {
@@ -111,19 +93,9 @@ const removeSize = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while deleting Size.");
       });
-
-    // await Size.findByIdAndDelete(removalid)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, success, "Size Details deleted"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const getSize = asyncHandler(async (req, res) => {
@@ -152,7 +124,7 @@ const getSize = asyncHandler(async (req, res) => {
     )
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
 });

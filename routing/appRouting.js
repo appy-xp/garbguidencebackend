@@ -12,11 +12,11 @@ import { verifyJWT } from "../middleware/auth.middleware.js";
 export default function (app) {
   app.use("/api/v1/user", userRouter);
   app.use("/api/v1/brand", verifyJWT, brandRouter);
-  app.use("/api/v1/item", verifyJWT, itemRouter);
+  app.use("/api/v1/item", itemRouter);
   app.use("/api/v1/role", roleRouter);
   app.use("/api/v1/size", verifyJWT, sizeRouter);
-  app.use("/api/v1/staff", verifyJWT, staffRouter);
-  app.use("/api/v1/status", verifyJWT, statusRouter);
+  app.use("/api/v1/staff", staffRouter);
+  app.use("/api/v1/status", statusRouter);
   app.use("/api/v1/bom", verifyJWT, bomRouter);
   app.use("/api/v1/purchase", verifyJWT, purchaseRouter);
 }

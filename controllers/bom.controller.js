@@ -39,18 +39,9 @@ const addBom = asyncHandler(async (req, res) => {
     .catch((err) => {
       session.abortTransaction();
       removeFile(qrImgPath + "/" + qrfilename);
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
-  // const myBOM = await BOM.create(mappedDetails);
-  // const createdDetails = await BOM.findById(myBOM._id);
-  // if (!createdDetails) {
-  //   throw new ApiError(500, "Something went wrong while registering BOM.");
-  // }
-
-  // return res
-  //   .status(201)
-  //   .json(new ApiResponse(200, createdDetails, "BOM created successfully"));
 });
 const updateBom = asyncHandler(async (req, res) => {
   const updateid = req.params.id;
@@ -82,24 +73,14 @@ const updateBom = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
         throw new ApiError(500, "Something went wrong while deleting Size.");
       });
-    // await BOM.findByIdAndUpdate({ _id: mappedDetails._id }, mappedDetails)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, mappedDetails, "BOM Details updated"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const deleteBom = asyncHandler(async (req, res) => {
   const removalid = req.params.id;
   const founddata = await BOM.findById(removalid);
-  console.log("found data>>", founddata);
+
   let session = null;
   if (!founddata) {
     throw new ApiError(500, "Details doesnot exist.");
@@ -123,18 +104,9 @@ const deleteBom = asyncHandler(async (req, res) => {
       })
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while deleting Size.");
       });
-    // await BOM.findByIdAndDelete(removalid)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, success, "BOM Details deleted"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const getBom = asyncHandler(async (req, res) => {
@@ -145,7 +117,7 @@ const getBom = asyncHandler(async (req, res) => {
       session = _session;
       session.startTransaction();
       const sizedet = await BOM.find().sort({ _id: -1 }).session(session);
-      console.log("get bom>>>", sizedet);
+
       const sizedupdet = await BOM1.find().sort({ _id: -1 }).session(session);
       if (sizedet.length || sizedupdet.length) {
         return sizedet;
@@ -185,14 +157,9 @@ const getBom = asyncHandler(async (req, res) => {
     })
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
-  // const bomData = await BOM.find().sort({ _id: -1 });
-  // if (!bomData) {
-  //   throw new ApiError(500, "Something went wrong while registering BOM.");
-  // }
-  // return res.status(201).json(new ApiResponse(200, bomData, "BOM Details"));
 });
 const getBombyid = asyncHandler(async (req, res) => {
   const getid = req.params.id;
@@ -213,13 +180,5 @@ const generateQR = async (id) => {
     console.log(error);
     throw new ApiError(500, "Something went wrong while registering BOM.");
   }
-
-  // qr.image(getid)
-  //   .then((url) => {
-  //     return res.status(201).json(new ApiResponse(200, url, "BOM Details"));
-  //   })
-  //   .catch((err) => {
-  //     throw new ApiError(500, "Something went wrong while registering BOM.");
-  //   });
 };
 export { addBom, updateBom, deleteBom, getBom, getBombyid };

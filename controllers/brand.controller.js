@@ -30,17 +30,9 @@ const addBrands = asyncHandler(async (req, res) => {
     )
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
-  // const size = await Brand.create(mappedDetails);
-  // const createdDetails = await Brand.findById(size._id);
-  // if (!createdDetails) {
-  //   throw new ApiError(500, "Something went wrong while registering User.");
-  // }
-  // return res
-  //   .status(201)
-  //   .json(new ApiResponse(200, createdDetails, "Brand created successfully"));
 });
 const updateBrands = asyncHandler(async (req, res) => {
   const updateid = req.params.id;
@@ -72,18 +64,9 @@ const updateBrands = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while Updatind Brand.");
       });
-    // await Brand.findByIdAndUpdate({ _id: mappedDetails._id }, mappedDetails)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, mappedDetails, "Brand Details updated"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const removeBrands = asyncHandler(async (req, res) => {
@@ -109,19 +92,9 @@ const removeBrands = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while deleting Size.");
       });
-
-    // await Brand.findByIdAndDelete(removalid)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, success, "Brand Details deleted"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const getBrand = asyncHandler(async (req, res) => {
@@ -150,14 +123,9 @@ const getBrand = asyncHandler(async (req, res) => {
     )
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
-  // const branddata = await Brand.find().sort({ _id: -1 });
-  // if (!branddata) {
-  //   throw new ApiError(500, "Something went wrong while registering User.");
-  // }
-  // return res.status(201).json(new ApiResponse(200, branddata, "Brand Details"));
 });
 const getBrandbyid = asyncHandler(async (req, res) => {
   const getid = req.params.id;

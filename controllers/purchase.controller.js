@@ -31,19 +31,9 @@ const addPurchase = asyncHandler(async (req, res) => {
     )
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
-  // const mypurchase = await Purchase.create(mappedDetails);
-  // const createdDetails = await Purchase.findById(mypurchase._id);
-  // if (!createdDetails) {
-  //   throw new ApiError(500, "Something went wrong while registering User.");
-  // }
-  // return res
-  //   .status(201)
-  //   .json(
-  //     new ApiResponse(200, createdDetails, "Purchase created successfully")
-  //   );
 });
 const updatePurchase = asyncHandler(async (req, res) => {
   const updateid = req.params.id;
@@ -75,20 +65,9 @@ const updatePurchase = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while deleting Size.");
       });
-    // await Purchase.findByIdAndUpdate({ _id: mappedDetails._id }, mappedDetails)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(
-    //         new ApiResponse(200, mappedDetails, "Purchase Details updated")
-    //       );
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const deletePurchase = asyncHandler(async (req, res) => {
@@ -114,29 +93,14 @@ const deletePurchase = asyncHandler(async (req, res) => {
       )
       .catch((err) => {
         session.abortTransaction();
-        console.log("error is>>", err);
+
         throw new ApiError(500, "Something went wrong while deleting Size.");
       });
-    // await Purchase.findByIdAndDelete(removalid)
-    //   .then((success) => {
-    //     return res
-    //       .status(201)
-    //       .json(new ApiResponse(200, success, "Purchase Details deleted"));
-    //   })
-    //   .catch((err) => {
-    //     throw new ApiError(500, "Something went wrong");
-    //   });
   }
 });
 const getPurchase = asyncHandler(async (req, res) => {
   let session = null;
-  // const purchasedata = await Purchase.find().sort({ _id: -1 });
-  // if (!purchasedata) {
-  //   throw new ApiError(500, "Something went wrong while registering User.");
-  // }
-  // return res
-  //   .status(201)
-  //   .json(new ApiResponse(200, purchasedata, "Purchase Details"));
+
   return Purchase.createCollection()
     .then(async () => await Purchase.startSession())
     .then(async (_session) => {
@@ -172,7 +136,7 @@ const getPurchase = asyncHandler(async (req, res) => {
     })
     .catch((err) => {
       session.abortTransaction();
-      console.log("error is>>", err);
+
       throw new ApiError(500, "Something went wrong while registering User.");
     });
 });
@@ -186,10 +150,20 @@ const getPurchasebyid = asyncHandler(async (req, res) => {
     .status(201)
     .json(new ApiResponse(200, purchasedata, "Purchase Details"));
 });
+const getPurchaseCount = asyncHandler(async (req, res) => {
+  const purchasedata = await Purchase.find().countDocuments();
+  if (!purchasedata) {
+    throw new ApiError(500, "Something went wrong while registering User.");
+  }
+  return res
+    .status(201)
+    .json(new ApiResponse(200, purchasedata, "Purchase Details"));
+});
 export {
   addPurchase,
   updatePurchase,
   deletePurchase,
   getPurchase,
   getPurchasebyid,
+  getPurchaseCount,
 };
